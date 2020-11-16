@@ -52,3 +52,14 @@ lint:
 
 gofmt:
 	@./hack/verify-gofmt.sh
+
+display_unit_html:
+		go tool cover -html=$(TEST_RESULTS_DIR)/coverage_unit.out
+
+unit:
+		mkdir -p $(TEST_RESULTS_DIR)
+		#The idiomatic way to disable test caching explicitly is to use -count=1.
+		#$(GOTEST) -v ./... -count=1 -tags=unit -coverprofile $(TEST_RESULTS_DIR)/coverage_unit.out &> $(TEST_RESULTS_DIR)/dbg_unit.out
+		$(GOTEST) -v ./... -count=1 -tags=unit -coverprofile $(TEST_RESULTS_DIR)/coverage_unit.out
+		go tool cover -html=$(TEST_RESULTS_DIR)/coverage_unit.out -o $(TEST_RESULTS_DIR)/coverage_unit.html
+		go tool cover -func=$(TEST_RESULTS_DIR)/coverage_unit.out -o $(TEST_RESULTS_DIR)/func_coverage.out
